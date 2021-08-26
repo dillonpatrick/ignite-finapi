@@ -9,15 +9,22 @@ const customers = [];
 
 app.post("/account", (request, response) => {
   const { cpf, name } = request.body;
-  const id = uuid_v4();
+
+  const customerAlreadyExists = customers.some(
+    (customer) => customer.cpf === cpf
+  );
+
+  if (customerAlreadyExists) {
+    return response.status(401).json({ error: "Customer already exists!" });
+  }
 
   const customer = {
-    id,
+    id: uuid_v4(),
     cpf,
     name,
     statement: [],
   };
-
+ 
   customers.push(customer);
 
   return response.status(201).json(customer);
@@ -25,6 +32,5 @@ app.post("/account", (request, response) => {
 
 app.listen(3333, () => {
   console.clear();
-
   return console.log("Running Server 🔥 ");
 });
