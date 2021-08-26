@@ -24,10 +24,22 @@ app.post("/account", (request, response) => {
     name,
     statement: [],
   };
- 
+
   customers.push(customer);
 
   return response.status(201).json(customer);
+});
+
+app.get("/statement", (request, response) => {
+  const { cpf } = request.headers;
+
+  const customer = customers.find((customer) => customer.cpf === cpf);
+
+  if (!customer) {
+    return response.status(400).json({ error: "Statement not found" });
+  }
+
+  return response.json(customer.statement);
 });
 
 app.listen(3333, () => {
