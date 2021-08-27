@@ -50,6 +50,21 @@ app.get("/statement", verifyIfExistingCPF, (request, response) => {
   return response.json(customer.statement);
 });
 
+app.post("/deposit", verifyIfExistingCPF, (request, response) => {
+  const { description, amount } = request.body;
+  const { customer } = request;
+
+  const statementOperation = {
+    description,
+    amount,
+    created_at: new Date(),
+    type: "credit",
+  };
+
+  customer.statement.push(statementOperation);
+  return response.status(201).json(statementOperation);
+});
+
 app.listen(3333, () => {
   console.clear();
   return console.log("Running Server 🔥 ");
