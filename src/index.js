@@ -62,9 +62,8 @@ app.get("/statement", verifyIfExistingCPF, (request, response) => {
   return response.json(customer.statement);
 });
 
-app.get("/account", verifyIfExistingCPF, (request, response) => {
-  const { customer } = request;
-  return response.json(customer);
+app.get("/account", (request, response) => {
+  return response.json(customers);
 });
 
 app.get("/statement/date", verifyIfExistingCPF, (request, response) => {
@@ -116,16 +115,30 @@ app.post("/withdraw", verifyIfExistingCPF, (request, response) => {
   return response.status(201).send();
 });
 
-app.listen(3333, () => {
-  console.clear();
-  return console.log("Running Server 🔥 ");
-});
-
 app.put("/account", verifyIfExistingCPF, (request, response) => {
   const { name } = request.body;
   const { customer } = request;
 
   customer.name = name;
 
-  return response.status(201).send();
+  return response.status(200).send();
+});
+
+app.delete("/account", verifyIfExistingCPF, (request, response) => {
+  const { customer } = request;
+
+  customers.splice(customer, 1);
+  return response.status(200).send();
+});
+
+app.get("/balance", verifyIfExistingCPF, (request, response) => {
+  const {customer } = request;
+  const balance = getBalance(customer.statement);
+
+  response.json(`Seu saldo é de R$${balance}`);
+})
+
+app.listen(3333, () => {
+  console.clear();
+  return console.log("Running Server 🔥 ");
 });
