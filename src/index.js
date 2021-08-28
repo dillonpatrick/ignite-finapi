@@ -120,3 +120,12 @@ app.listen(3333, () => {
   console.clear();
   return console.log("Running Server 🔥 ");
 });
+
+app.put("/account", verifyIfExistingCPF, (request, response) => {
+  const { name } = request.body;
+  const { customer } = request;
+
+  customer.name = name;
+
+  return response.status(201).send();
+});
