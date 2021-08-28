@@ -126,17 +126,34 @@ app.put("/account", verifyIfExistingCPF, (request, response) => {
 
 app.delete("/account", verifyIfExistingCPF, (request, response) => {
   const { customer } = request;
+  const { cpf } = request.headers;
 
-  customers.splice(customer, 1);
+  const balance = getBalance(customer.statement);
+
+  const customerIndex = customers.findIndex((customer) => customer.cpf === cpf);
+
+  if (customerIndex < 0) {
+    return response.status.json({ error: "Customer Not found" });
+  }
+  if (balance > 0) {
+    return response 
+      .status(401)
+      .json({
+        error:
+          "It is not possible to delete an account with a positive balance",
+      });
+  }
+
+  customers.splice(customerIndex, 1);
   return response.status(200).send();
 });
 
 app.get("/balance", verifyIfExistingCPF, (request, response) => {
-  const {customer } = request;
+  const { customer } = request;
   const balance = getBalance(customer.statement);
 
   response.json(`Seu saldo é de R$${balance}`);
-})
+});
 
 app.listen(3333, () => {
   console.clear();
