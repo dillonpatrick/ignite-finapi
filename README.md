@@ -19,3 +19,4 @@
     - [x]  Não deve ser possivel fazer saque em uma conta não existente
     - [x]  Não deve ser possivel fazer saque quando o saldo for insuficiente
     - [x]  Não deve ser possivel excluir uma conta não existente
+    - [x]  Não deve ser possivel deletar uma conta com saldo positivo
